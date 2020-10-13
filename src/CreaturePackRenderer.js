@@ -1,5 +1,7 @@
-import { Mesh } from 'tinyjs-plugin-mesh';
+import mesh from 'tinyjs-plugin-mesh';
 import CreatureHaxeBaseRenderer from './CreatureHaxeBaseRenderer';
+
+const { Mesh } = mesh;
 
 class CreaturePackRenderer extends Mesh {
   constructor(packData, texture) {

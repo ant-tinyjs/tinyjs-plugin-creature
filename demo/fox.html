@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>tinyjs-plugin-creature Demo</title>
+<meta content="yes" name="apple-mobile-web-app-capable"/>
+<meta content="yes" name="apple-touch-fullscreen"/>
+<meta content="telephone=no,email=no" name="format-detection"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"/>
+<style>
+html, body, p, div {margin:0;padding:0;}
+</style>
+</head>
+<body>
+
+<script src="https://gw.alipayobjects.com/os/lib/tinyjs/tiny/1.5.0/tiny.js"></script>
+<script src="../index.debug.js"></script>
+
+<script type="text/javascript">
+  // 新建 App
+  var app = new Tiny.Application({
+    showFPS: true,
+    width: 500,
+    height: 500,
+    fixSize: true,
+  });
+
+  var container = new Tiny.Container();
+  app.run(container);
+
+  var frame_cnt = 0;
+  var loader = new Tiny.loaders.BinaryLoader('./res/fox0x.creature_pack');
+
+  loader.load({
+    onComplete: function(response) {
+      var byteArray = new Uint8Array(response);
+      var creaturePack = new Tiny.creature.CreaturePackLoader(byteArray.buffer);
+      var texture = Tiny.Texture.fromImage('./res/fox.png');
+      var raptorRenderer = new Tiny.creature.CreaturePackRenderer(creaturePack, texture);
+
+      console.log('Loaded CreaturePack Data with size: ' + byteArray.byteLength);
+      raptorRenderer.packRenderer.setActiveAnimation('default');
+      container.addChild(raptorRenderer);
+      container.setPosition(Tiny.WIN_SIZE.width / 2, Tiny.WIN_SIZE.height / 2);
+      container.setScale(12);
+
+      container.updateTransform = function() {
+        raptorRenderer.packRenderer.stepTime(1);
+        raptorRenderer.refresh(true);
+
+        frame_cnt++;
+
+        if(frame_cnt % 150 == 0) {
+          raptorRenderer.packRenderer.blendToAnimation('run', 0.03);
+        }  else if(frame_cnt % 501 == 0) {
+          raptorRenderer.packRenderer.blendToAnimation('default', 0.06);
+        }
+        this.containerUpdateTransform();
+      }
+    }
+  });
+</script>
+</body>
+</html>

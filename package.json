@@ -11,6 +11,9 @@
     "type": "git",
     "url": "https://github.com/ant-tinyjs/tinyjs-plugin-creature.git"
   },
+  "engines": {
+    "install-node": "^10.22.1"
+  },
   "main": "main.js",
   "files": [
     "index.js",
@@ -70,6 +73,6 @@
   },
   "homepage": "https://github.com/ant-tinyjs/tinyjs-plugin-creature#readme",
   "dependencies": {
-    "tinyjs-plugin-mesh": "^1.2.0"
+    "tinyjs-plugin-mesh": "^1.3.1"
   }
 }

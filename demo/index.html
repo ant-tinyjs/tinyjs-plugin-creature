@@ -7,49 +7,34 @@
 <meta content="yes" name="apple-touch-fullscreen"/>
 <meta content="telephone=no,email=no" name="format-detection"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"/>
-<style>
-html, body, p, div {margin:0;padding:0;}
-</style>
+<link href="https://as.alipayobjects.com/g/h5-lib/antui/9.9.0-2/rem/antui.css" rel="stylesheet"/>
 </head>
 <body>
 
-<script src="https://gw.alipayobjects.com/os/lib/tinyjs/tiny/1.3.0/tiny.js"></script>
-<script src="../index.debug.js"></script>
-
-<script type="text/javascript">
-  // 新建 App
-  var app = new Tiny.Application({
-    showFPS: true,
-    width: 320,
-    height: 320,
-    fixSize: true,
-  });
-
-  var container = new Tiny.Container();
-  app.run(container);
-
-  var loader = new Tiny.loaders.BinaryLoader('./fox2x.creature_pack');
-
-  loader.load({
-    onComplete: function(response) {
-      var byteArray = new Uint8Array(response);
-      var creaturePack = new Tiny.creature.CreaturePackLoader(byteArray.buffer);
-      var texture = Tiny.Texture.fromImage('fox.png');
-      var raptorRenderer = new Tiny.creature.CreaturePackRenderer(creaturePack, texture);
-
-      console.log('Loaded CreaturePack Data with size: ' + byteArray.byteLength);
-      raptorRenderer.packRenderer.setActiveAnimation('run');
-      container.addChild(raptorRenderer);
-      container.setPosition(Tiny.WIN_SIZE.width / 2, Tiny.WIN_SIZE.height / 2);
-      container.setScale(6);
-
-      container.updateTransform = function() {
-        raptorRenderer.packRenderer.stepTime(1);
-        raptorRenderer.refresh(true);
-        this.containerUpdateTransform();
-      }
-    }
-  });
-</script>
+<div class="am-list">
+  <div class="am-list-header">Creature Demo</div>
+  <div class="am-list-body">
+    <a href="bat.html" class="am-list-item">
+      <div class="am-list-content">Bat</div>
+      <div class="am-list-arrow"><span class="am-icon arrow horizontal"></span></div>
+    </a>
+    <a href="composer.html" class="am-list-item">
+      <div class="am-list-content">Composer</div>
+      <div class="am-list-arrow"><span class="am-icon arrow horizontal"></span></div>
+    </a>
+    <a href="flamingo.html" class="am-list-item">
+      <div class="am-list-content">Flamingo</div>
+      <div class="am-list-arrow"><span class="am-icon arrow horizontal"></span></div>
+    </a>
+    <a href="fox.html" class="am-list-item">
+      <div class="am-list-content">Fox</div>
+      <div class="am-list-arrow"><span class="am-icon arrow horizontal"></span></div>
+    </a>
+    <a href="horseman.html" class="am-list-item">
+      <div class="am-list-content">Horseman</div>
+      <div class="am-list-arrow"><span class="am-icon arrow horizontal"></span></div>
+    </a>
+  </div>
+</div>
 </body>
 </html>
