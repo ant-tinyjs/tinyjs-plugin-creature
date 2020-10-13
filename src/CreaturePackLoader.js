@@ -34,19 +34,19 @@ class CreaturePackLoader {
     this.finalAllPointSamples();
 
     // init Animation Clip Map
-    for (var i = 0; i < this.getAnimationNum(); i++) {
-      var curOffsetPair = this.getAnimationOffsets(i);
-      var animName = this.fileData[curOffsetPair[0]];
-      var k = curOffsetPair[0];
+    for (let i = 0; i < this.getAnimationNum(); i++) {
+      const curOffsetPair = this.getAnimationOffsets(i);
+      const animName = this.fileData[curOffsetPair[0]];
+      let k = curOffsetPair[0];
 
       k++;
 
-      var newClip = new CreaturePackAnimClip(k);
+      const newClip = new CreaturePackAnimClip(k);
 
       while (k < curOffsetPair[1]) {
-        var curTime = this.fileData[k];
-        newClip.addTimeSample(curTime, k);
+        const curTime = this.fileData[k];
 
+        newClip.addTimeSample(curTime, k);
         k += 4;
       }
 
@@ -58,27 +58,28 @@ class CreaturePackLoader {
   }
 
   formUndirectedGraph() {
-    var retGraph = {};
-    var numTriangles = this.getNumIndices() / 3;
+    const retGraph = {};
+    const numTriangles = this.getNumIndices() / 3;
 
-    for (var i = 0; i < numTriangles; i++) {
-      var triIndices = new Array(3);
+    for (let i = 0; i < numTriangles; i++) {
+      const triIndices = new Array(3);
 
       triIndices[0] = this.indices[i * 3];
       triIndices[1] = this.indices[i * 3 + 1];
       triIndices[2] = this.indices[i * 3 + 2];
 
-      for (var m = 0; m < triIndices.length; m++) {
-        var triIndex = triIndices[m];
+      for (let m = 0; m < triIndices.length; m++) {
+        const triIndex = triIndices[m];
 
         if ((triIndex in retGraph) === false) {
           retGraph[triIndex] = new GraphNode(triIndex);
         }
 
-        var curGraphNode = retGraph[triIndex];
+        const curGraphNode = retGraph[triIndex];
 
-        for (var j = 0; j < triIndices.length; j++) {
-          var cmpIndex = triIndices[j];
+        for (let j = 0; j < triIndices.length; j++) {
+          const cmpIndex = triIndices[j];
+
           if (cmpIndex !== triIndex) {
             curGraphNode.neighbours.push(cmpIndex);
           }
@@ -90,24 +91,27 @@ class CreaturePackLoader {
   }
 
   regionsDFS(graph, idx) {
-    var retData = [];
+    const retData = [];
+
     if (graph[idx].visited) {
       return retData;
     }
 
-    var gstack = [];
+    const gstack = [];
+
     gstack.push(idx);
 
     while (gstack.length > 0) {
-      var curIdx = gstack.pop();
+      const curIdx = gstack.pop();
+      const curNode = graph[curIdx];
 
-      var curNode = graph[curIdx];
       if (curNode.visited === false) {
         curNode.visited = true;
         retData.push(curNode.idx);
         // search all connected for curNode
-        for (var m = 0; m < curNode.neighbours.length; m++) {
-          var neighbourIdx = curNode.neighbours[m];
+        for (let m = 0; m < curNode.neighbours.length; m++) {
+          const neighbourIdx = curNode.neighbours[m];
+
           gstack.push(neighbourIdx);
         }
       }
@@ -117,13 +121,14 @@ class CreaturePackLoader {
   }
 
   findConnectedRegions() {
-    var regionsList = [];
-    var graph = this.formUndirectedGraph();
+    const regionsList = [];
+    const graph = this.formUndirectedGraph();
 
-    for (var i = 0; i < this.getNumIndices(); i++) {
-      var curIdx = this.indices[i];
+    for (let i = 0; i < this.getNumIndices(); i++) {
+      const curIdx = this.indices[i];
+
       if (graph[curIdx].visited === false) {
-        var indicesList = this.regionsDFS(graph, curIdx);
+        const indicesList = this.regionsDFS(graph, curIdx);
 
         indicesList.sort(function(a, b) {
           return a - b;
@@ -140,7 +145,7 @@ class CreaturePackLoader {
   }
 
   updateIndices(idx) {
-    var curData = this.fileData[idx];
+    const curData = this.fileData[idx];
 
     for (var i = 0; i < curData.length; i++) {
       this.indices[i] = curData[i];
@@ -148,24 +153,25 @@ class CreaturePackLoader {
   }
 
   updatePoints(idx) {
-    var curData = this.fileData[idx];
+    const curData = this.fileData[idx];
 
-    for (var i = 0; i < curData.length; i++) {
+    for (let i = 0; i < curData.length; i++) {
       this.points[i] = curData[i];
     }
   }
 
   updateUVs(idx) {
-    var curData = this.fileData[idx];
+    const curData = this.fileData[idx];
 
-    for (var i = 0; i < curData.length; i++) {
+    for (let i = 0; i < curData.length; i++) {
       this.uvs[i] = curData[i];
     }
   }
 
   getAnimationNum() {
-    var sum = 0;
-    for (var i = 0; i < this.headerList.length; i++) {
+    let sum = 0;
+
+    for (let i = 0; i < this.headerList.length; i++) {
       if (this.headerList[i] === 'animation') {
         sum++;
       }
@@ -175,7 +181,7 @@ class CreaturePackLoader {
   }
 
   hasDeformCompress() {
-    for (var i = 0; i < this.headerList.length; i++) {
+    for (let i = 0; i < this.headerList.length; i++) {
       if (this.headerList[i] === 'deform_comp1') {
         return 'deform_comp1';
       } else if (this.headerList[i] === 'deform_comp2') {
@@ -190,8 +196,8 @@ class CreaturePackLoader {
 
   fillDeformRanges() {
     if (this.hasDeformCompress() !== '') {
-      var curRangesOffset = this.getAnimationOffsets(this.getAnimationNum());
-      var curRanges = this.fileData[curRangesOffset[0]];
+      const curRangesOffset = this.getAnimationOffsets(this.getAnimationNum());
+      const curRanges = this.fileData[curRangesOffset[0]];
 
       this.dMinX = curRanges[0];
       this.dMinY = curRanges[1];
@@ -201,22 +207,23 @@ class CreaturePackLoader {
   };
 
   finalAllPointSamples() {
-    var deformCompressType = this.hasDeformCompress();
+    const deformCompressType = this.hasDeformCompress();
 
     if (deformCompressType === '') {
       return;
     }
 
-    for (var i = 0; i < this.getAnimationNum(); i++) {
-      var curOffsetPair = this.getAnimationOffsets(i);
-      var k = curOffsetPair[0];
+    for (let i = 0; i < this.getAnimationNum(); i++) {
+      const curOffsetPair = this.getAnimationOffsets(i);
+      let k = curOffsetPair[0];
+
       k++;
 
       while (k < curOffsetPair[1]) {
-        var ptsRawArray = this.fileData[k + 1];
-        var ptsRawByteArray = this.fileData[k + 1];
-        var rawNum = ptsRawArray.byteLength;
-        var ptsDataview = new DataView(ptsRawByteArray);
+        const ptsRawArray = this.fileData[k + 1];
+        const ptsRawByteArray = this.fileData[k + 1];
+        let rawNum = ptsRawArray.byteLength;
+        const ptsDataview = new DataView(ptsRawByteArray);
 
         if (deformCompressType === 'deform_comp2') {
           rawNum = ptsRawByteArray.byteLength;
@@ -224,11 +231,11 @@ class CreaturePackLoader {
           rawNum = ptsRawByteArray.byteLength / 2;
         }
 
-        var finalPtsArray = new Array(rawNum);
+        const finalPtsArray = new Array(rawNum);
 
-        for (var m = 0; m < rawNum; m++) {
-          var bucketVal = 0;
-          var numBuckets = 0;
+        for (let m = 0; m < rawNum; m++) {
+          let bucketVal = 0;
+          let numBuckets = 0;
 
           if (deformCompressType === 'deform_comp1') {
             bucketVal = ptsRawArray[m];
@@ -241,7 +248,7 @@ class CreaturePackLoader {
             numBuckets = 65535;
           }
 
-          var setVal = 0.0;
+          let setVal = 0.0;
 
           if (m % 2 === 0) {
             setVal = (bucketVal / numBuckets * (this.dMaxX - this.dMinX)) + this.dMinX;

@@ -16,27 +16,29 @@ class CreatureHaxeBaseRenderer {
     this.renderUvs = new Array(this.data.uvs.length);
     this.renderColors = new Array(this.data.points.length / 2 * 4);
 
-    for (var i = 0; i < this.renderColors.length; i++) {
+    for (let i = 0; i < this.renderColors.length; i++) {
       this.renderColors[i] = 1.0;
     }
 
-    for (var j = 0; j < this.renderUvs.length; j++) {
+    for (let j = 0; j < this.renderUvs.length; j++) {
       this.renderUvs[j] = this.data.uvs[j];
     }
   }
 
   createRuntimeMap() {
     this.runTimeMap = {};
-    var firstSet = false;
 
-    for (var animName in this.data.animClipMap) {
+    let firstSet = false;
+
+    for (let animName in this.data.animClipMap) {
       if (firstSet === false) {
         firstSet = true;
         this.activeAnimationName = animName;
         this.prevAnimationName = animName;
       }
 
-      var animClip = this.data.animClipMap[animName];
+      const animClip = this.data.animClipMap[animName];
+
       this.runTimeMap[animName] = animClip.startTime;
     }
   }
@@ -83,58 +85,59 @@ class CreatureHaxeBaseRenderer {
 
   // Call this before a render to update the render data
   syncRenderData() {
-    var firstSampleIdx = 0;
-    var secondSampleIdx = 1;
-    var sampleFraction = 2;
+    let firstSampleIdx = 0;
+    let secondSampleIdx = 1;
+    let sampleFraction = 2;
 
     {
       // Points blending
       if (this.activeAnimationName === this.prevAnimationName) {
-        var curClip = this.data.animClipMap[this.activeAnimationName];
+        const curClip = this.data.animClipMap[this.activeAnimationName];
         // no blending
-        var curClipInfo = curClip.sampleTime(this.getRunTime());
-        var lowData = curClip.timeSamplesMap[curClipInfo[firstSampleIdx]];
-        var highData = curClip.timeSamplesMap[curClipInfo[secondSampleIdx]];
+        const curClipInfo = curClip.sampleTime(this.getRunTime());
+        const lowData = curClip.timeSamplesMap[curClipInfo[firstSampleIdx]];
+        const highData = curClip.timeSamplesMap[curClipInfo[secondSampleIdx]];
 
-        var animLowPoints = this.data.fileData[lowData.getAnimPointsOffset()];
-        var animHighPoints = this.data.fileData[highData.getAnimPointsOffset()];
+        const animLowPoints = this.data.fileData[lowData.getAnimPointsOffset()];
+        const animHighPoints = this.data.fileData[highData.getAnimPointsOffset()];
 
-        for (var i = 0; i < this.renderPoints.length; i++) {
-          var lowVal = animLowPoints[i];
-          var highVal = animHighPoints[i];
+        for (let i = 0; i < this.renderPoints.length; i++) {
+          const lowVal = animLowPoints[i];
+          const highVal = animHighPoints[i];
+
           this.renderPoints[i] = this.interpScalar(lowVal, highVal, curClipInfo[sampleFraction]);
         }
       } else {
         // blending
 
         // Active Clip
-        var activeClip = this.data.animClipMap[this.activeAnimationName];
+        const activeClip = this.data.animClipMap[this.activeAnimationName];
 
-        var activeClipInfo = activeClip.sampleTime(this.getRunTime());
-        var activeLowData = activeClip.timeSamplesMap[activeClipInfo[firstSampleIdx]];
-        var activeHighData = activeClip.timeSamplesMap[activeClipInfo[secondSampleIdx]];
+        const activeClipInfo = activeClip.sampleTime(this.getRunTime());
+        const activeLowData = activeClip.timeSamplesMap[activeClipInfo[firstSampleIdx]];
+        const activeHighData = activeClip.timeSamplesMap[activeClipInfo[secondSampleIdx]];
 
-        var activeAnimLowPoints = this.data.fileData[activeLowData.getAnimPointsOffset()];
-        var activeAnimHighPoints = this.data.fileData[activeHighData.getAnimPointsOffset()];
+        const activeAnimLowPoints = this.data.fileData[activeLowData.getAnimPointsOffset()];
+        const activeAnimHighPoints = this.data.fileData[activeHighData.getAnimPointsOffset()];
 
         // Previous Clip
-        var prevClip = this.data.animClipMap[this.prevAnimationName];
+        const prevClip = this.data.animClipMap[this.prevAnimationName];
 
-        var prevClipInfo = prevClip.sampleTime(this.getRunTime());
-        var prevLowData = prevClip.timeSamplesMap[prevClipInfo[firstSampleIdx]];
-        var prevHighData = prevClip.timeSamplesMap[prevClipInfo[secondSampleIdx]];
+        const prevClipInfo = prevClip.sampleTime(this.getRunTime());
+        const prevLowData = prevClip.timeSamplesMap[prevClipInfo[firstSampleIdx]];
+        const prevHighData = prevClip.timeSamplesMap[prevClipInfo[secondSampleIdx]];
 
-        var prevAnimLowPoints = this.data.fileData[prevLowData.getAnimPointsOffset()];
-        var prevAnimHighPoints = this.data.fileData[prevHighData.getAnimPointsOffset()];
+        const prevAnimLowPoints = this.data.fileData[prevLowData.getAnimPointsOffset()];
+        const prevAnimHighPoints = this.data.fileData[prevHighData.getAnimPointsOffset()];
 
-        for (var j = 0; j < this.renderPoints.length; j++) {
-          var activeLowVal = activeAnimLowPoints[j];
-          var activeHighVal = activeAnimHighPoints[j];
-          var activeVal = this.interpScalar(activeLowVal, activeHighVal, activeClipInfo[sampleFraction]);
+        for (let j = 0; j < this.renderPoints.length; j++) {
+          const activeLowVal = activeAnimLowPoints[j];
+          const activeHighVal = activeAnimHighPoints[j];
+          const activeVal = this.interpScalar(activeLowVal, activeHighVal, activeClipInfo[sampleFraction]);
 
-          var prevLowVal = prevAnimLowPoints[j];
-          var prevHighVal = prevAnimHighPoints[j];
-          var prevVal = this.interpScalar(prevLowVal, prevHighVal, prevClipInfo[sampleFraction]);
+          const prevLowVal = prevAnimLowPoints[j];
+          const prevHighVal = prevAnimHighPoints[j];
+          const prevVal = this.interpScalar(prevLowVal, prevHighVal, prevClipInfo[sampleFraction]);
 
           this.renderPoints[j] = this.interpScalar(prevVal, activeVal, this.animBlendFactor);
         }
@@ -142,20 +145,20 @@ class CreatureHaxeBaseRenderer {
 
       // Colors
       {
-        var curClip = this.data.animClipMap[this.activeAnimationName];
+        const curClip = this.data.animClipMap[this.activeAnimationName];
         // no blending
-        var curClipInfo = curClip.sampleTime(this.getRunTime());
-        var lowData = curClip.timeSamplesMap[curClipInfo[firstSampleIdx]];
-        var highData = curClip.timeSamplesMap[curClipInfo[secondSampleIdx]];
+        const curClipInfo = curClip.sampleTime(this.getRunTime());
+        const lowData = curClip.timeSamplesMap[curClipInfo[firstSampleIdx]];
+        const highData = curClip.timeSamplesMap[curClipInfo[secondSampleIdx]];
 
-        var animLowColors = this.data.fileData[lowData.getAnimColorsOffset()];
-        var animHighColors = this.data.fileData[highData.getAnimColorsOffset()];
+        const animLowColors = this.data.fileData[lowData.getAnimColorsOffset()];
+        const animHighColors = this.data.fileData[highData.getAnimColorsOffset()];
 
         if ((animLowColors.length === this.renderColors.length) &&
           (animHighColors.length === this.renderColors.length)) {
-          for (var k = 0; k < this.renderColors.length; k++) {
-            var lowVal = animLowColors[k];
-            var highVal = animHighColors[k];
+          for (let k = 0; k < this.renderColors.length; k++) {
+            const lowVal = animLowColors[k];
+            const highVal = animHighColors[k];
 
             this.renderColors[k] = this.interpScalar(lowVal, highVal, curClipInfo[sampleFraction]) / 255.0;
           }
@@ -164,13 +167,13 @@ class CreatureHaxeBaseRenderer {
 
       // UVs
       {
-        var curClip = this.data.animClipMap[this.activeAnimationName];
-        var curClipInfo = curClip.sampleTime(this.getRunTime());
-        var lowData = curClip.timeSamplesMap[curClipInfo[firstSampleIdx]];
-        var animUvs = this.data.fileData[lowData.getAnimUvsOffset()];
+        const curClip = this.data.animClipMap[this.activeAnimationName];
+        const curClipInfo = curClip.sampleTime(this.getRunTime());
+        const lowData = curClip.timeSamplesMap[curClipInfo[firstSampleIdx]];
+        const animUvs = this.data.fileData[lowData.getAnimUvsOffset()];
 
         if (animUvs.length === this.renderUvs.length) {
-          for (var l = 0; l < this.renderUvs.length; l++) {
+          for (let l = 0; l < this.renderUvs.length; l++) {
             this.renderUvs[l] = animUvs[l];
           }
         }
