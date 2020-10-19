@@ -38,13 +38,18 @@ html, body, p, div {margin:0;padding:0;}
       var raptorRenderer = new Tiny.creature.CreaturePackRenderer(creaturePack, texture);
 
       console.log('Loaded CreaturePack Data with size: ' + byteArray.byteLength);
-      raptorRenderer.packRenderer.setActiveAnimation('run');
+      raptorRenderer.packRenderer.setActiveAnimation('default');
       container.addChild(raptorRenderer);
       container.setPosition(Tiny.WIN_SIZE.width / 2, Tiny.WIN_SIZE.height / 2);
       container.setScale(20);
 
+      raptorRenderer.setEventEnabled(true);
+      raptorRenderer.on('pointerdown', function() {
+        raptorRenderer.packRenderer.blendToAnimation('run', 0.06);
+      });
+
       container.updateTransform = function() {
-        raptorRenderer.packRenderer.stepTime(0.1);
+        raptorRenderer.packRenderer.stepTime(0.4);
         raptorRenderer.refresh(true);
         this.containerUpdateTransform();
       }

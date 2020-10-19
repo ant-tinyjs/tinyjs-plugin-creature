@@ -2,7 +2,17 @@ import * as msgpack from './msgpack';
 import CreaturePackAnimClip from './CreaturePackAnimClip';
 import GraphNode from './GraphNode';
 
+/**
+ * This is the class the loads in Creature Pack Data from disk or net
+ *
+ * @class
+ * @memberof Tiny.creature
+ */
 class CreaturePackLoader {
+  /**
+   *
+   * @param {Uint8Array} bytesIn
+   */
   constructor(bytesIn) {
     this.indices = [];
     this.uvs = [];
@@ -55,6 +65,7 @@ class CreaturePackLoader {
     }
 
     this.meshRegionsList = this.findConnectedRegions();
+    console.log(this);
   }
 
   formUndirectedGraph() {

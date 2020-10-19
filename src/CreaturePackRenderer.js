@@ -3,11 +3,25 @@ import CreatureHaxeBaseRenderer from './CreatureHaxeBaseRenderer';
 
 const { Mesh } = mesh;
 
+/**
+ * @class
+ * @memberof Tiny.creature
+ * @extends Tiny.mesh.Mesh
+ */
 class CreaturePackRenderer extends Mesh {
+  /**
+   *
+   * @param {Tiny.creature.CreaturePackLoader} packData
+   * @param {Tiny.Texture} texture
+   */
   constructor(packData, texture) {
     super(texture);
 
     this.packData = packData;
+
+    /**
+     * @type {Tiny.creature.CreatureHaxeBaseRenderer}
+     */
     this.packRenderer = new CreatureHaxeBaseRenderer(this.packData);
     this.texture = texture;
     this.blendMode = Tiny.BLEND_MODES.NORMAL;

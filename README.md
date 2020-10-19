@@ -2,6 +2,8 @@
 
 > Runtime plugin for CreaturePack Web Format
 
+了解更多，请查看 [Creature 官网](https://creature.kestrelmoon.com/)
+
 ## 查看demo
 
 http://tinyjs.net/plugins/tinyjs-plugin-creature.html#demo
@@ -24,7 +26,7 @@ http://tinyjs.net/plugins/tinyjs-plugin-creature.html#demo
 
 引用 Tiny.js 源码
 ``` html
-<script src="https://gw.alipayobjects.com/os/lib/tinyjs/tiny/1.3.0/tiny.js"></script>
+<script src="https://gw.alipayobjects.com/os/lib/tinyjs/tiny/1.5.0/tiny.js"></script>
 ```
 ``` js
 var creature = require('tinyjs-plugin-creature');

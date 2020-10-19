@@ -1,6 +1,12 @@
 /* eslint-disable no-redeclare */
 /* eslint-disable no-lone-blocks */
 
+/**
+ * Base Renderer class that target renderers inherit from
+ *
+ * @class
+ * @memberof Tiny.creature
+ */
 class CreatureHaxeBaseRenderer {
   constructor(dataIn) {
     this.data = dataIn;
@@ -43,7 +49,11 @@ class CreatureHaxeBaseRenderer {
     }
   }
 
-  // Sets an active animation without blending
+  /**
+   * Sets an active animation without blending
+   *
+   * @param {string} nameIn
+   */
   setActiveAnimation(nameIn) {
     if (this.runTimeMap.hasOwnProperty(nameIn)) {
       this.activeAnimationName = nameIn;
@@ -52,7 +62,12 @@ class CreatureHaxeBaseRenderer {
     }
   }
 
-  // Smoothly blends to a target animation
+  /**
+   * Smoothly blends to a target animation
+   *
+   * @param {string} nameIn
+   * @param {number} blendDelta
+   */
   blendToAnimation(nameIn, blendDelta) {
     this.prevAnimationName = this.activeAnimationName;
     this.activeAnimationName = nameIn;
@@ -60,15 +75,26 @@ class CreatureHaxeBaseRenderer {
     this.animBlendDelta = blendDelta;
   }
 
+  /**
+   *
+   * @param {number} timeIn
+   */
   setRunTime(timeIn) {
     this.runTimeMap[this.activeAnimationName] = this.data.animClipMap[this.activeAnimationName].correctTime(timeIn, this.isLooping);
   }
 
+  /**
+   * @returns {object}
+   */
   getRunTime() {
     return this.runTimeMap[this.activeAnimationName];
   }
 
-  // Steps the animation by a delta time
+  /**
+   * Steps the animation by a delta time
+   *
+   * @param {number} deltaTime
+   */
   stepTime(deltaTime) {
     this.setRunTime(this.getRunTime() + deltaTime);
 
