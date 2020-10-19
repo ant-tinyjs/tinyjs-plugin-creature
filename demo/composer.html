@@ -26,29 +26,34 @@ html, body, p, div {margin:0;padding:0;}
   });
 
   var container = new Tiny.Container();
-  app.run(container);
+  var loader = new Tiny.loaders.Loader();
+  var onAssetsLoaded = function(loader, res) {
+    var byteArray = new Uint8Array(res.creatureRes.data);
+    var creaturePack = new Tiny.creature.CreaturePackLoader(byteArray.buffer);
+    var texture = Tiny.Texture.fromImage('./res/composer.png');
+    var raptorRenderer = new Tiny.creature.CreaturePackRenderer(creaturePack, texture);
 
-  var loader = new Tiny.loaders.BinaryLoader('./res/composer.creature_pack');
+    console.log('Loaded CreaturePack Data with size: ' + byteArray.byteLength);
+    container.addChild(raptorRenderer);
+    container.setPosition(Tiny.WIN_SIZE.width / 2, Tiny.WIN_SIZE.height / 2 - 300);
+    container.setScale(50);
 
-  loader.load({
-    onComplete: function(response) {
-      var byteArray = new Uint8Array(response);
-      var creaturePack = new Tiny.creature.CreaturePackLoader(byteArray.buffer);
-      var texture = Tiny.Texture.fromImage('./res/composer.png');
-      var raptorRenderer = new Tiny.creature.CreaturePackRenderer(creaturePack, texture);
-
-      console.log('Loaded CreaturePack Data with size: ' + byteArray.byteLength);
-      container.addChild(raptorRenderer);
-      container.setPosition(Tiny.WIN_SIZE.width / 2, Tiny.WIN_SIZE.height / 2 - 300);
-      container.setScale(50);
-
-      container.updateTransform = function() {
-        raptorRenderer.packRenderer.stepTime(1);
-        raptorRenderer.refresh(true);
-        this.containerUpdateTransform();
-      }
+    container.updateTransform = function() {
+      raptorRenderer.packRenderer.stepTime(1);
+      raptorRenderer.refresh(true);
+      this.containerUpdateTransform();
     }
-  });
+  };
+
+  loader
+    .add({
+      name: 'creatureRes',
+      url: './res/composer.creature_pack',
+      xhrType: Tiny.loaders.Resource.XHR_RESPONSE_TYPE.BUFFER,
+    })
+    .load(onAssetsLoaded);
+
+  app.run(container);
 </script>
 </body>
 </html>
