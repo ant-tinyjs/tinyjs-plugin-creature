@@ -65,7 +65,6 @@ class CreaturePackLoader {
     }
 
     this.meshRegionsList = this.findConnectedRegions();
-    console.log(this);
   }
 
   formUndirectedGraph() {
